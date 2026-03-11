@@ -1,0 +1,15 @@
+*.json
+*.tfstate
+.env_encoded
+
+# Python virtual environment
+.venv/
+
+# Data outputs
+data/*.csv
+data/books_output/
+
+# Terraform local files
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
