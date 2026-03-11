@@ -13,3 +13,4 @@ data/books_output/
 terraform/.terraform/
 terraform/*.tfstate
 terraform/*.tfstate.backup
+terraform/tfplan

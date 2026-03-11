@@ -12,6 +12,11 @@ spark = (
    .getOrCreate()
 )
 
+
+# Add this line here:
+spark.sparkContext.setLogLevel("WARN")
+
+
 # --- 2. Paths ---
 input_path = "/workspaces/books-data-pipeline/data/Books.csv"
 output_path = "/workspaces/books-data-pipeline/data/books_output"
@@ -80,12 +85,6 @@ df = df.withColumn("publisher", F.when(author_condition, F.col("year")).otherwis
 print(df.count())
 df.filter(F.size(F.col("split_parts")) > 1).show()
 
-
-
-# 1. Start with the dirty dataframe
-# Create the 'title_clean' column once and we will keep updating IT.
-# 2. Setup the fixes (Order is very important!)
-# We put the 2-character sequences FIRST so they don't get broken by single-char fixes.
 encoding_fixes = {
     # Catalan / Italian fixes
     "í²": "ò",

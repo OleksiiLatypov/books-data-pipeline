@@ -11,7 +11,7 @@ java -version
 readlink -f $(which java)
 export GOOGLE_APPLICATION_CREDENTIALS="/workspaces/books-recommendation-data-pipeline/service-account.json"
 
-sudo chmod -R 777 /workspaces/kestra/data/books_output
+sudo chmod -R 777 /workspaces/books-data-pipeline/data/books_output
 
 docker exec -it spark-master /opt/spark/bin/spark-submit \
   --master spark://spark-master:7077 \
