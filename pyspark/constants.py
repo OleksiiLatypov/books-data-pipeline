@@ -39,14 +39,14 @@ class Config:
         ]
 
     # --- 4. PROCESSING ---
-    INPUT_PATH_BOOKS = "gs://kestra-bucket-latypov/raw/Books.csv"
-    OUTPUT_PATH_BOOKS = "gs://kestra-bucket-latypov/pyspark_transformed/books" 
+    INPUT_PATH_BOOKS = "gs://kestra-books-bucket-latypov/raw/Books.csv"
+    OUTPUT_PATH_BOOKS = "gs://kestra-books-bucket-latypov/pyspark_transformed/books" 
 
-    INPUT_PATH_USERS = "gs://kestra-bucket-latypov/raw/Users.csv"
-    OUTPUT_PATH_USERS = "gs://kestra-bucket-latypov/pyspark_transformed/users" 
+    INPUT_PATH_USERS = "gs://kestra-books-bucket-latypov/raw/Users.csv"
+    OUTPUT_PATH_USERS = "gs://kestra-books-bucket-latypov/pyspark_transformed/users" 
 
-    INPUT_PATH_RATING = "gs://kestra-bucket-latypov/raw/Rating.csv"
-    OUTPUT_PATH_RATING = "gs://kestra-bucket-latypov/pyspark_transformed/rating"
+    INPUT_PATH_RATING = "gs://kestra-books-bucket-latypov/raw/Rating.csv"
+    OUTPUT_PATH_RATING = "gs://kestra-books-bucket-latypov/pyspark_transformed/rating"
     # Define reusable CSV options
     CSV_OPTIONS = {
         "header": True,
