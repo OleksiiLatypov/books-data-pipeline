@@ -1,6 +1,6 @@
 variable "project" {
   description = "Google Cloud project ID"
-  default     = "kestra-demo-486209"
+  default     = "books-pipeline-490008"
 }
 
 variable "region" {
@@ -15,12 +15,12 @@ variable "location" {
 
 variable "bq_dataset_name" {
   description = "BigQuery Dataset for Books, Users, Ratings"
-  default     = "books_dataset"
+  default     = "books_dataset_project"
 }
 
 variable "gcs_bucket_name" {
   description = "Storage Bucket for Books Data"
-  default     = "kestra-bucket-latypov"
+  default     = "kestra-books-bucket-latypov"
 }
 
 variable "gcs_storage_class" {
