@@ -1,4 +1,11 @@
-def split_location(df, colName, idx):
+import logging
+from pyspark.sql import functions as F
+
+# Setup logger for the utils file
+logger = logging.getLogger(__name__)
+
+
+def split_location(df, colName, idx, exceptions):
     return df.withColumn(
         colName,
         F.when(
@@ -19,13 +26,13 @@ def split_location(df, colName, idx):
                 )
             )
         )
-    
-
 
 def null_check(df):
+    """Checks and logs null counts for all columns."""
     for c in df.columns:
         null_counts = df.filter(df[c].isNull()).count()
         if null_counts > 0:
             logger.warning(f"Column '{c}': {null_counts} null values found")
         else:
             logger.info(f"Column '{c}': No nulls")
+    return 

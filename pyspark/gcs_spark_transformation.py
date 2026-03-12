@@ -13,6 +13,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
+logger.info(f"# --- 1. CONFIGURE LOGGING ---\n")
 
 # --- 2. PATH LOGIC ---
 start = time.time()
@@ -24,6 +25,9 @@ if not key_path or not os.path.exists(key_path):
     else:
         key_path = "gcp-key.json"
 
+logger.info(f"\n\n\n# --- 2. PATH LOGIC GCP_KEY_PATH ---\n")      
+logger.info(f"Using GCP Key from: {key_path}\n")
+
 
 
 # --- 3. SPARK SESSION ---
@@ -34,8 +38,7 @@ spark = (SparkSession.builder
     .config("spark.hadoop.google.cloud.auth.service.account.json.keyfile", key_path)
     .getOrCreate())
 
-
-logger.info(f"Using GCP Key from: {key_path}")
+logger.info(f"\n\n\n# --- 3. SPARK SESSION ---")
 logger.info(f"Spark version: {spark.version}")
 # Reduce Spark internal noise
 spark.sparkContext.setLogLevel("WARN")
@@ -44,6 +47,7 @@ spark.sparkContext.setLogLevel("WARN")
 # --- 4. PROCESS BOOKS DATA ---
 
 def process_books(spark, input_path, output_path):
+    logger.info(f"\n\n\n# --- 4. PROCESS BOOKS DATA ---")
     logger.info(f"Reading CSV from: {input_path}")
     
     df = spark.read.options(**Config.CSV_OPTIONS).csv(input_path)
@@ -72,7 +76,7 @@ def process_books(spark, input_path, output_path):
     
     # Null checks
     null_amount = null_check(df)
-    logger.info(f'Check missing values for USERS data:\n {null_amount}')
+    logger.info(f'Check missing values for BOOKS data: {null_amount}')
 
     # Handling shifted rows
     df = df.withColumn("split_parts", F.split(F.col("title"), r'\";'))
@@ -112,12 +116,12 @@ def process_books(spark, input_path, output_path):
 
 
 def process_users(spark, input_path, output_path):
-
+    logger.info(f"\n\n\n# --- 5. PROCESS USERS DATA ---")
     logger.info(f"Reading Users Data from: {input_path}")
 
-    df = spark.read.options(**CSV_OPTIONS).csv(input_path)
+    df = spark.read.options(**Config.CSV_OPTIONS).csv(input_path)
 
-    logger.info(f"Schema for USERS data laoded")
+    logger.info(f"Schema for USERS data loaded")
 
     df.printSchema()
 
@@ -137,12 +141,12 @@ def process_users(spark, input_path, output_path):
 
     # Null checks
     null_amount = null_check(df)
-    logger.info(f'Check missing values for USERS data:\n {null_amount}')
+    logger.info(f'Check missing values for USERS data: {null_amount}\n')
      
 
-    df = split_location(df, "city", 0)
-    df = split_location(df, "region", 1)
-    df = split_location(df, "country", 2)
+    df = split_location(df, "city", 0, Config.EXCEPTIONS_LIST)
+    df = split_location(df, "region", 1, Config.EXCEPTIONS_LIST)
+    df = split_location(df, "country", 2, Config.EXCEPTIONS_LIST)
 
     df = df.drop(F.col("split_parts"))
 
@@ -160,9 +164,10 @@ def process_users(spark, input_path, output_path):
 
 def process_rating(spark, input_path, output_path):
 
+    logger.info(f"\n\n\n# --- 5. PROCESS RATING DATA ---")
     logger.info(f"Reading RATING Data from: {input_path}")
 
-    df = spark.read.options(**CSV_OPTIONS).csv(input_path)
+    df = spark.read.options(**Config.CSV_OPTIONS).csv(input_path)
 
     logger.info(f"Schema for RATING data loaded")
 
@@ -176,6 +181,10 @@ def process_rating(spark, input_path, output_path):
 
     df = df.withColumnRenamed("User-ID", "user_id") \
             .withColumnRenamed("Book-Rating", "book_rating")
+    
+    # Null checks
+    null_amount = null_check(df)
+    logger.info(f'Check missing values for USERS data: {null_amount}\n')
 
     logger.info(f"Writing transformed RATING data from {input_path} source to: {output_path}")
     df.write.mode("overwrite").parquet(output_path)
@@ -190,7 +199,6 @@ except Exception as e:
 
 
 try:
-    logger.info(f"USERS data from {input_path} processed and saved successfully to {output_path}")
     process_users(spark, input_path = Config.INPUT_PATH_USERS, output_path = Config.OUTPUT_PATH_USERS)
 except Exception as e:
     logger.exception("An error occurred during the USERS transformation:")
