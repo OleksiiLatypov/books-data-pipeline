@@ -32,3 +32,14 @@ variable "credentials" {
   description = "My Google Cloud Account credentials"
   default     = "../service-account.json"
 }
+
+
+variable "kaggle_username" {
+  description = "Kaggle API Username"
+  sensitive   = true
+}
+
+variable "kaggle_key" {
+  description = "Kaggle API Key"
+  sensitive   = true
+}
