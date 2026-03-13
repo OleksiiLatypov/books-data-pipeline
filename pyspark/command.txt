@@ -7,6 +7,16 @@ spark-submit --master "local[*]"\
 --conf "spark.hadoop.fs.gs.auth.type=SERVICE_ACCOUNT_JSON_KEYFILE"\
 gcs_spark.py
 
+
+#DEEP CLEAN
+# 1. Stop everything and delete the 1.7GB volume
+docker compose down -v
+
+# 2. Delete ALL images (This will clear 6GB)
+docker image rm python:3.11-slim postgres:18 kestra/kestra:v1.1 apache/spark:4.0.1-java21-r hashicorp/terraform:1.9.5
+
+
+
 java -version
 readlink -f $(which java)
 export GOOGLE_APPLICATION_CREDENTIALS="/workspaces/books-recommendation-data-pipeline/service-account.json"
